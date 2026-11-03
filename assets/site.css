@@ -126,6 +126,14 @@ h1, h2, h3, p { margin: 0; font-weight: inherit; }
 /* Main works: one full-screen stage, moved sideways */
 .work-anchor { height: 0; }
 .stage { position: sticky; top: 0; height: 100vh; height: 100svh; background: #000; }
+.stage-label {
+  position: absolute; z-index: 3;
+  top: calc(var(--margin) * .8 + 2.1rem); left: var(--margin);
+  color: #fff;
+  font-size: clamp(1.25rem, 2.1vw, 2rem); line-height: 1;
+  text-shadow: 0 0 14px rgba(0, 0, 0, .45);
+  pointer-events: none;
+}
 .stage-track {
   display: flex; height: 100%;
   overflow-x: auto; overflow-y: hidden;
