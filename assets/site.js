@@ -93,7 +93,7 @@
 
     document.addEventListener('click', function (event) {
       var link = event.target.closest && event.target.closest('a.square, a.slide');
-      if (!link || event.metaKey || event.ctrlKey || event.shiftKey) return;
+      if (!link || link.hasAttribute('data-external') || event.metaKey || event.ctrlKey || event.shiftKey) return;
       var embed = embedFor(link.href);
       if (!embed) return;
       event.preventDefault();
