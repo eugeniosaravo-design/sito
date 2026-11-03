@@ -116,6 +116,7 @@ h1, h2, h3, p { margin: 0; font-weight: inherit; }
 .work-frame:focus-visible { outline-offset: -6px; }
 
 /* Main works: one full-screen stage, moved sideways */
+.work-anchor { height: 0; }
 .stage { position: sticky; top: 0; height: 100vh; height: 100svh; background: #000; }
 .stage-track {
   display: flex; height: 100%;
@@ -164,14 +165,24 @@ main > section, .page-section { position: relative; background: var(--bg); paddi
 
 .thumb { position: relative; display: block; }
 .square img { width: 100%; height: auto; aspect-ratio: 1; object-fit: cover; }
-.badge {
-  position: absolute; left: .75rem; bottom: .75rem;
-  display: grid; place-items: center;
-  width: 2.75rem; height: 2.75rem;
-  background: #fff; color: #000;
-  font-size: 1.05rem;
+.thumb-word {
+  position: absolute; inset: 0; display: grid; place-items: center;
+  color: #fff; font-size: clamp(2rem, 4.4vw, 4.5rem);
+  opacity: 0;
 }
-.square h3 { margin-top: .7rem; font-weight: 500; line-height: 1.25; }
+.square-text {
+  display: flex; justify-content: space-between; align-items: baseline; gap: 1rem;
+  margin-top: .7rem;
+}
+.square-text h3 { min-width: 0; margin: 0; }
+.action { flex: none; font-weight: 500; text-decoration: underline; text-underline-offset: .2em; }
+@media (hover: hover) {
+  .square img { transition: filter .15s linear; }
+  .thumb-word { transition: opacity .15s linear; }
+  .square:hover img, .square:focus-visible img { filter: brightness(.5); }
+  .square:hover .thumb-word, .square:focus-visible .thumb-word { opacity: 1; }
+}
+.square h3 { font-weight: 500; line-height: 1.25; }
 .square p { color: var(--dim); }
 .square:hover h3 { text-decoration: underline; text-underline-offset: .2em; }
 
@@ -252,6 +263,16 @@ html:has(.player[open]) { overflow: hidden; }
 .credits dt { grid-column: 1 / span 5; color: var(--dim); }
 .credits dd { grid-column: 7 / -1; margin: 0; font-weight: 500; }
 
+/* When the full titles no longer fit, the tabs become plain markers: the title is already on the frame */
+@media (max-width: 1100px) {
+  .stage-tabs button { height: 2.75rem; padding: 0; }
+  .stage-tabs button span {
+    position: absolute; width: 1px; height: 1px; overflow: hidden;
+    clip-path: inset(50%); white-space: nowrap;
+  }
+  .slide .caption { bottom: calc(var(--margin) + 2.75rem); }
+}
+
 @media (max-width: 900px) {
   .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .grid--four { grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -263,7 +284,6 @@ html:has(.player[open]) { overflow: hidden; }
   .stills { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .credits dt { grid-column: 1 / span 6; }
   .credits dd { grid-column: 7 / -1; }
-  .stage-tabs button { font-size: .8rem; white-space: nowrap; }
 }
 
 @media (max-aspect-ratio: 1/1) {
@@ -275,5 +295,6 @@ html:has(.player[open]) { overflow: hidden; }
 
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
+  .square img, .thumb-word { transition: none; }
   .brand { transition: none; }
 }
