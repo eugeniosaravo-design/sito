@@ -56,6 +56,7 @@ h1, h2, h3, p { margin: 0; font-weight: inherit; }
   text-shadow: 0 0 14px rgba(0, 0, 0, .55);
   font-weight: 500;
 }
+.header-solid .site-header { background: #000; text-shadow: none; }
 .site-header nav { display: flex; gap: 1.5rem; }
 .site-header a:hover { text-decoration: underline; text-underline-offset: .2em; }
 .brand { transition: opacity .2s linear; }

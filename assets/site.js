@@ -39,12 +39,23 @@
       });
     }
 
-    /* The small name in the header appears once the big one has scrolled away */
-    if ('IntersectionObserver' in window) {
-      new IntersectionObserver(function (entries) {
-        root.classList.toggle('at-top', entries[0].isIntersecting);
-      }, { threshold: 0.5 }).observe(opening);
-    }
+  }
+
+  /* Header: the small name appears as the big one is covered. Once content starts
+     moving under the header, it gets a black background so texts never overlap. */
+  var header = document.querySelector('.site-header');
+  var mark = document.querySelector('[data-header-from]');
+  if (header && mark) {
+    var updateHeader = function () {
+      var y = window.scrollY;
+      var start = mark.getBoundingClientRect().top + y;
+      if (mark.getAttribute('data-header-from') === 'before') start -= header.offsetHeight;
+      root.classList.toggle('header-solid', y > start);
+      if (opening) root.classList.toggle('at-top', y < window.innerHeight * 0.5);
+    };
+    window.addEventListener('scroll', updateHeader, { passive: true });
+    window.addEventListener('resize', updateHeader);
+    updateHeader();
   }
 
   /* Stage: the four main works share one screen, the tabs move between them */
