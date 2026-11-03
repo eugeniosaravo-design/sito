@@ -11,4 +11,5 @@ Sito statico in HTML, CSS e JavaScript, senza build. Si pubblica da solo con Git
 - Home: i lavori principali sono blocchi `.slide` a tutto schermo nella `.stage`, che scorre di lato, gli altri sono quadrati `.square`. `data-stills` elenca i frame che scorrono col mouse.
 - I link Vimeo, YouTube e Instagram (reel o post) si aprono nel player del sito. Un link con `data-external` apre invece il sito esterno.
 - I video restano su Vimeo, YouTube e Instagram. Non caricare file video nel repository.
+- Se cambi `assets/site.css` o `assets/site.js`, cambia anche il valore `?v=` nei link di `index.html` e `newbalancecorsiesistine/index.html`, altrimenti i browser usano la copia vecchia.
 - Font: Archivo, licenza OFL, ospitato in `assets/font/`.
