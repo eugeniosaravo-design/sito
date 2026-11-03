@@ -82,6 +82,37 @@
     }
   }
 
+  /* Rows of square works: arrows for those who can't scroll sideways */
+  document.querySelectorAll('.grid').forEach(function (row) {
+    var nav = document.createElement('div');
+    nav.className = 'row-nav';
+    nav.setAttribute('role', 'group');
+    nav.setAttribute('aria-label', 'Scroll this row');
+    function arrow(label, path, direction) {
+      var button = document.createElement('button');
+      button.type = 'button';
+      button.setAttribute('aria-label', label);
+      button.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="' + path + '"/></svg>';
+      button.addEventListener('click', function () {
+        row.scrollBy({ left: direction * row.clientWidth * 0.72, behavior: reduced ? 'auto' : 'smooth' });
+      });
+      nav.appendChild(button);
+      return button;
+    }
+    var back = arrow('Previous works', 'M15 4l-8 8 8 8', -1);
+    var next = arrow('Next works', 'M9 4l8 8-8 8', 1);
+    row.closest('section').appendChild(nav);
+    function update() {
+      var end = row.scrollWidth - row.clientWidth;
+      nav.hidden = end < 2;
+      back.disabled = row.scrollLeft < 2;
+      next.disabled = row.scrollLeft > end - 2;
+    }
+    row.addEventListener('scroll', update, { passive: true });
+    window.addEventListener('resize', update);
+    update();
+  });
+
   /* Videos open inside the site. Without this script the links still work. */
   function embedFor(href) {
     var m;
