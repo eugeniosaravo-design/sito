@@ -47,6 +47,77 @@
     }
   }
 
+  /* Stage: the four main works share one screen, the tabs move between them */
+  var track = document.querySelector('.stage-track');
+  if (track) {
+    var tabs = Array.prototype.slice.call(document.querySelectorAll('.stage-tabs button'));
+    tabs.forEach(function (tab) {
+      tab.addEventListener('click', function () {
+        var slide = document.getElementById(tab.getAttribute('data-target'));
+        track.scrollTo({ left: slide.offsetLeft, behavior: reduced ? 'auto' : 'smooth' });
+      });
+    });
+    if ('IntersectionObserver' in window) {
+      var seenBy = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (!entry.isIntersecting) return;
+          tabs.forEach(function (tab) {
+            if (tab.getAttribute('data-target') === entry.target.id) tab.setAttribute('aria-current', 'true');
+            else tab.removeAttribute('aria-current');
+          });
+        });
+      }, { root: track, threshold: 0.6 });
+      track.querySelectorAll('.slide').forEach(function (slide) { seenBy.observe(slide); });
+    }
+  }
+
+  /* Videos open inside the site. Without this script the links still work. */
+  function embedFor(href) {
+    var m;
+    if ((m = href.match(/vimeo\.com\/(\d+)(?:\/(\w+))?/))) {
+      return { src: 'https://player.vimeo.com/video/' + m[1] + '?autoplay=1&dnt=1' + (m[2] ? '&h=' + m[2] : ''), site: 'Vimeo' };
+    }
+    if ((m = href.match(/(?:youtu\.be\/|[?&]v=)([\w-]{11})/))) {
+      return { src: 'https://www.youtube-nocookie.com/embed/' + m[1] + '?autoplay=1&rel=0', site: 'YouTube' };
+    }
+    if ((m = href.match(/instagram\.com\/(reel|p)\/([\w-]+)/))) {
+      return { src: 'https://www.instagram.com/' + m[1] + '/' + m[2] + '/embed/', site: 'Instagram', tall: true };
+    }
+    return null;
+  }
+
+  var player = document.querySelector('.player');
+  if (player && player.showModal) {
+    var stage = player.querySelector('.player-stage');
+    var out = player.querySelector('.player-out');
+
+    document.addEventListener('click', function (event) {
+      var link = event.target.closest && event.target.closest('a.square, a.slide');
+      if (!link || event.metaKey || event.ctrlKey || event.shiftKey) return;
+      var embed = embedFor(link.href);
+      if (!embed) return;
+      event.preventDefault();
+      var heading = link.querySelector('h2, h3');
+      var frame = document.createElement('iframe');
+      frame.src = embed.src;
+      frame.title = heading.textContent;
+      frame.className = embed.tall ? 'tall' : 'wide';
+      frame.allow = 'autoplay; fullscreen; picture-in-picture; encrypted-media';
+      frame.allowFullscreen = true;
+      stage.appendChild(frame);
+      player.querySelector('.player-title').textContent = heading.textContent;
+      out.href = link.href;
+      out.textContent = 'Watch on ' + embed.site;
+      player.showModal();
+    });
+
+    /* Closing removes the video, which stops the sound */
+    player.addEventListener('close', function () { stage.textContent = ''; });
+    player.addEventListener('click', function (event) {
+      if (event.target === player || event.target === stage) player.close();
+    });
+  }
+
   /* Full-screen works: moving the pointer across the frame cuts through its stills */
   var canHover = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
   if (canHover && !reduced) {
