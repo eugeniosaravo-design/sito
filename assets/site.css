@@ -56,7 +56,14 @@ h1, h2, h3, p { margin: 0; font-weight: inherit; }
   text-shadow: 0 0 14px rgba(0, 0, 0, .55);
   font-weight: 500;
 }
-.header-solid .site-header { background: #000; text-shadow: none; }
+.site-header::before {
+  content: ""; position: absolute; z-index: -1; inset: 0 0 auto 0; height: 210%;
+  background: linear-gradient(to bottom,
+    #000 0%, #000 38%, rgba(0, 0, 0, .82) 54%, rgba(0, 0, 0, .45) 72%, rgba(0, 0, 0, .14) 88%, rgba(0, 0, 0, 0) 100%);
+  opacity: 0; pointer-events: none;
+  transition: opacity .3s linear;
+}
+.header-solid .site-header::before { opacity: 1; }
 .site-header nav { display: flex; gap: 1.5rem; }
 .site-header a:hover { text-decoration: underline; text-underline-offset: .2em; }
 .brand { transition: opacity .2s linear; }
@@ -296,6 +303,6 @@ html:has(.player[open]) { overflow: hidden; }
 
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
-  .square img, .thumb-word { transition: none; }
+  .square img, .thumb-word, .site-header::before { transition: none; }
   .brand { transition: none; }
 }
