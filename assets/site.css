@@ -170,6 +170,9 @@ main > section, .page-section { position: relative; background: var(--bg); paddi
 }
 .grid--four { grid-template-columns: repeat(4, minmax(0, 1fr)); }
 .grid > .section-title { grid-column: span 2; margin: 0; }
+.grid--mosaic { grid-template-columns: repeat(12, minmax(0, 1fr)); }
+.grid--mosaic .square { grid-column: span 3; }
+.grid--mosaic .square:nth-child(-n+3) { grid-column: span 4; }
 
 .thumb { position: relative; display: block; }
 .square img { width: 100%; height: auto; aspect-ratio: 1; object-fit: cover; }
@@ -182,7 +185,7 @@ main > section, .page-section { position: relative; background: var(--bg); paddi
   display: flex; justify-content: space-between; align-items: baseline; gap: 1rem;
   margin-top: .7rem;
 }
-.square-text h3 { min-width: 0; margin: 0; }
+.square-text h3 { min-width: 0; margin: 0; overflow-wrap: anywhere; }
 .action { flex: none; font-weight: 500; text-decoration: underline; text-underline-offset: .2em; }
 @media (hover: hover) {
   .square img { transition: filter .15s linear; }
@@ -284,6 +287,10 @@ html:has(.player[open]) { overflow: hidden; }
 @media (max-width: 900px) {
   .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .grid--four { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .grid--mosaic { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .grid--mosaic .square, .grid--mosaic .square:nth-child(-n+3) { grid-column: auto; }
+  .square-text { display: block; }
+  .square-text .action { display: inline-block; margin-top: .2rem; }
   .about-grid img { grid-column: 1 / span 9; }
   .about-text { grid-column: 1 / -1; }
   .project-intro h2, .project-intro div { grid-column: 1 / -1; }
